@@ -1,44 +1,58 @@
+
 class BusquedaProductos {
     constructor() {
         this.productos = [];
     }
 
     agregar(producto) {
+        if (this.buscarPorCodigo(producto.getCodigo())) {
+            return false;
+        }
+
         this.productos.push(producto);
+        return true;
+    }
+
+    mostrarTodos() {
+        return this.productos;
     }
 
     buscarPorCodigo(codigo) {
-        for (const p of this.productos) {
-            if (p.codigo.toLowerCase() === codigo.toLowerCase()) {
-                return p;
-            }
-        }
-        return null;
+        return this.productos.find(
+            p => p.getCodigo().toLowerCase() === codigo.toLowerCase()
+        ) || null;
     }
 
-    buscarPorNombre(texto) {
-        const resultados = [];
+    buscarPorNombre(nombre) {
+        return this.productos.filter(
+            p => p.getNombre().toLowerCase().includes(nombre.toLowerCase())
+        );
+    }
 
-        for (const p of this.productos) {
-            if (p.nombre.toLowerCase().includes(texto.toLowerCase())) {
-                resultados.push(p);
-            }
+    actualizar(codigo, nombre, precio, existencia) {
+        const producto = this.buscarPorCodigo(codigo);
+
+        if (!producto) {
+            return false;
         }
 
-        return resultados;
+        producto.setNombre(nombre);
+        producto.setPrecio(precio);
+        producto.setExistencia(existencia);
+
+        return true;
     }
-}
 
-// Programa principal
-const inventario = new BusquedaProductos();
+    eliminar(codigo) {
+        const indice = this.productos.findIndex(
+            p => p.getCodigo().toLowerCase() === codigo.toLowerCase()
+        );
 
-inventario.agregar(new Producto("P001", "Teclado", 350.0, 20));
-inventario.agregar(new Producto("P002", "Mouse", 180.0, 35));
+        if (indice === -1) {
+            return false;
+        }
 
-const encontrado = inventario.buscarPorCodigo("P002");
-
-if (encontrado !== null) {
-    encontrado.mostrarInformacion();
-} else {
-    console.log("Producto no encontrado");
+        this.productos.splice(indice, 1);
+        return true;
+    }
 }

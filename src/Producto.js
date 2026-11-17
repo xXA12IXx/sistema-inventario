@@ -1,3 +1,4 @@
+
 class Producto {
     #codigo;
     #nombre;
@@ -13,5 +14,38 @@ class Producto {
 
     getCodigo() {
         return this.#codigo;
+    }
+
+    getNombre() {
+        return this.#nombre;
+    }
+
+    getPrecio() {
+        return this.#precio;
+    }
+
+    getExistencia() {
+        return this.#existencia;
+    }
+
+    setNombre(nombre) {
+        this.#nombre = nombre;
+    }
+
+    setPrecio(precio) {
+        this.#precio = precio;
+    }
+
+    setExistencia(existencia) {
+        this.#existencia = existencia;
+    }
+
+    mostrarInformacion() {
+        return {
+            codigo: this.#codigo,
+            nombre: this.#nombre,
+            precio: this.#precio,
+            existencia: this.#existencia
+        };
     }
 }
