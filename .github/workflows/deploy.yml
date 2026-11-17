@@ -1,11 +1,7 @@
 
-name: Despliegue del sistema de inventario
+name: Despliegue del Sistema de Inventario
 
 on:
-  push:
-    tags:
-      - 'v*'
-
   workflow_dispatch:
 
 jobs:
@@ -13,42 +9,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Descargar repositorio
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
+      - name: Descargar artefacto liberado
+        uses: robinraju/release-downloader@v1
         with:
-          node-version: 22
+          repository: ${{ github.repository }}
+          tag: v1.0.0
+          fileName: sistema-inventario-v1.0.0.zip
 
-      - name: Verificar archivos del proyecto
+      - name: Preparar directorio
         run: |
-          test -f src/Producto.js
-          test -f src/BusquedaProducto.js
-          test -f src/app.js
-          test -f src/index.html
+          mkdir -p despliegue
+          unzip sistema-inventario-v1.0.0.zip -d despliegue
 
-      - name: Verificar sintaxis JavaScript
+      - name: Verificar archivos
         run: |
-          node --check src/Producto.js
-          node --check src/BusquedaProducto.js
-          node --check src/app.js
-
-      - name: Preparar paquete de despliegue
-        run: |
-          mkdir -p release
-          cp src/Producto.js release/
-          cp src/BusquedaProducto.js release/
-          cp src/app.js release/
-          cp src/index.html release/
-
-      - name: Generar paquete
-        run: |
-          cd release
-          zip -r ../sistema-inventario.zip .
-
-      - name: Publicar artefacto
-        uses: actions/upload-artifact@v4
-        with:
-          name: sistema-inventario
-          path: sistema-inventario.zip
+          echo "Contenido del directorio de despliegue:"
+          ls -R despliegue
